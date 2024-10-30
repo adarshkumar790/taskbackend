@@ -20,6 +20,15 @@ const registerUser = async (req, res) => {
     }
 };
 
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find().select('-password'); // Exclude passwords
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -103,4 +112,4 @@ const updateUserPassword = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, getUser, updateUserInfo, updateUserPassword };
+module.exports = { registerUser, loginUser, getUser, updateUserInfo, updateUserPassword, getAllUsers };
