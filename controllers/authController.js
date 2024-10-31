@@ -60,8 +60,9 @@ const getUser = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 const updateUserInfo = async (req, res) => {
-    const { name, email, oldPassword, newPassword } = req.body;
+    const { name, email } = req.body;
     try {
         const user = await User.findById(req.user._id);
 
@@ -69,8 +70,8 @@ const updateUserInfo = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Update email if it’s new and unique
         if (email && email !== user.email) {
+            // Check if email already exists
             const emailExists = await User.findOne({ email });
             if (emailExists) {
                 return res.status(400).json({ message: 'Email already in use' });
@@ -78,29 +79,16 @@ const updateUserInfo = async (req, res) => {
             user.email = email;
         }
 
-        // Update name if provided
         if (name) {
             user.name = name;
         }
 
-        // Update password if both oldPassword and newPassword are provided
-        if (oldPassword && newPassword) {
-            const isMatch = await bcrypt.compare(oldPassword, user.password);
-            if (!isMatch) {
-                return res.status(400).json({ message: 'Old password is incorrect' });
-            }
-
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(newPassword, salt); // Encrypt new password
-        }
-
         await user.save();
-        res.json({ message: 'User information updated successfully' });
+        res.json({ message: 'User updated successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
 };
-
 
 const updateUserPassword = async (req, res) => {
     const { oldPassword, newPassword } = req.body;
