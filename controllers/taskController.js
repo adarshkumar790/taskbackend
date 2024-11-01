@@ -77,26 +77,25 @@ const updateTask = async (req, res) => {
 
 // Delete Task
 // Delete Task
+// Delete Task
 const deleteTask = async (req, res) => {
-    const { taskId } = req.params; // Check if taskId is correctly passed
+    const { taskId } = req.params;
 
     try {
-        // Find task by ID
         const task = await Task.findById(taskId);
         if (!task) {
-            return res.status(404).json({ message: 'Task not found' }); // Error if task is missing
+            return res.status(404).json({ message: 'Task not found' });
         }
 
-        // Check if user is the creator of the task
+        // Ensure the user is the creator of the task
         if (task.createdBy.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ message: 'Unauthorized' }); // Error if user is not the creator
+            return res.status(403).json({ message: 'Unauthorized' });
         }
 
-        // Delete task
         await task.remove();
         res.json({ message: 'Task deleted successfully' });
     } catch (error) {
-        console.error('Error deleting task:', error); // Log error for debugging
+        console.error('Error deleting task:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
