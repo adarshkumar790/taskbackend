@@ -76,8 +76,6 @@ const updateTask = async (req, res) => {
 };
 
 // Delete Task
-// Delete Task
-// Delete Task
 const deleteTask = async (req, res) => {
     const { taskId } = req.params;
 
@@ -87,7 +85,7 @@ const deleteTask = async (req, res) => {
             return res.status(404).json({ message: 'Task not found' });
         }
 
-        // Ensure the user is the creator of the task
+        // Check if the user is the creator of the task
         if (task.createdBy.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'Unauthorized' });
         }
@@ -95,11 +93,9 @@ const deleteTask = async (req, res) => {
         await task.remove();
         res.json({ message: 'Task deleted successfully' });
     } catch (error) {
-        console.error('Error deleting task:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
-
 
 // Filter Tasks
 const filterTasks = async (req, res) => {
