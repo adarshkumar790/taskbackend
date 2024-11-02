@@ -112,4 +112,19 @@ const updateUserPassword = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, getUser, updateUserInfo, updateUserPassword, getAllUsers };
+const getCurrentUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('-password'); // Exclude password
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+module.exports = { registerUser, loginUser, getUser, updateUserInfo, updateUserPassword, getAllUsers, getCurrentUser };
+
+
+// module.exports = { registerUser, loginUser, getUser, updateUserInfo, updateUserPassword, getAllUsers };
